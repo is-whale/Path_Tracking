@@ -173,9 +173,7 @@ void loadPath() {
         nav_msgs::Odometry::ConstPtr odom_msg = m.instantiate<nav_msgs::Odometry>();
         if (odom_msg != nullptr) {
             geometry_msgs::PoseStamped pose_stamped;
-            // pose_stamped.header
-            // =
-            // odom_msg->header;
+            // pose_stamped.header = odom_msg->header;
             pose_stamped.header.frame_id = "map";
             static int seq = 0;
             pose_stamped.pose = odom_msg->pose.pose;
@@ -207,8 +205,8 @@ int main(int argc, char **argv) {
     // loadPath();
 
     ros::Subscriber odom_sub = nh.subscribe("/odom", 10, odomCallback);
-    ros::Subscriber path_sub = nh.subscribe("/platform/vehicle/goal_path", 10,
-                                            pathCallback); // TODO:检查话题开头的/会不会有影响
+    // TODO:检查话题开头的/会不会有影响
+    ros::Subscriber path_sub = nh.subscribe("/platform/vehicle/goal_path", 10, pathCallback);
     cmd_pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 10);
     // cmd_pub =
     // nh.advertise<geometry_msgs::Twist>("/cmd_vel",
