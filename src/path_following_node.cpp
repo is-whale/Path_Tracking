@@ -2,6 +2,7 @@
 #include <cmath>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Twist.h>
+#include <iostream>
 #include <nav_msgs/Odometry.h>
 #include <nav_msgs/Path.h>
 #include <ros/ros.h>
@@ -147,8 +148,9 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &odom_msg) {
     }
 
     //输出cloest_index 与teb_target_index以及夹角
-    ROS_INFO("[ Pure Pursuit param ] : closest_index: %d, teb_target_index: %d, delta_distance: %.2f", closest_index,
-             teb_target_index, delta_distance);
+    ROS_INFO("[ Pure Pursuit param ] : closest_index: %d, teb_target_index: %d, "
+             "delta_distance: %.2f",
+             closest_index, teb_target_index, delta_distance);
 }
 
 void pathCallback(const nav_msgs::Path::ConstPtr &path_msg) {
@@ -164,7 +166,7 @@ void loadPath() {
     ROS_WARN("Loading path from %s", input_bag_filename.c_str());
     rosbag::Bag bag;
     bag.open(input_bag_filename, rosbag::bagmode::Read);
-
+    std::cout << " bag" << bag.isOpen() << std::endl;
     path.poses.clear();
     rosbag::View         view(bag, rosbag::TopicQuery("/odom"));
     geometry_msgs::Point last_added_point;
@@ -202,7 +204,7 @@ int main(int argc, char **argv) {
     goal_pub = nh.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
 
     //暂时不适用轨迹录制的包
-    // loadPath();
+    loadPath();
 
     ros::Subscriber odom_sub = nh.subscribe("/odom", 10, odomCallback);
     // TODO:检查话题开头的/会不会有影响
